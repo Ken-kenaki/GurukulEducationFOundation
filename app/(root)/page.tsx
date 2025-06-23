@@ -8,7 +8,7 @@ import UniversitiesCarousel from "@/Components/Universities";
 import StudentSuccessCarousel from "@/Components/StudentSuccess";
 import CountriesCarousel from "@/Components/Countries";
 
-const page = () => {
+export default async function page() {
   return (
     <main>
       <HeroSection />
@@ -21,6 +21,4 @@ const page = () => {
       <CountriesCarousel />
     </main>
   );
-};
-
-export default page;
+}
