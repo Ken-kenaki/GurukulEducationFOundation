@@ -6,7 +6,7 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); // Changed from isScrolledUp
+  const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showDestinations, setShowDestinations] = useState(false);
   const [showTestPrep, setShowTestPrep] = useState(false);
@@ -19,32 +19,27 @@ export default function Navbar() {
   const servicesRef = useRef(null);
 
   const destinations = [
-    { name: "Australia", route: "/australia" },
-    { name: "Canada", route: "/canada" },
-    { name: "USA", route: "/usa" },
-    { name: "UK", route: "/uk" },
-    { name: "New Zealand", route: "/new-zealand" },
-    { name: "Germany", route: "/germany" },
-    { name: "Ireland", route: "/ireland" },
-    { name: "Japan", route: "/japan" },
+    { name: "South Korea", route: "/countries" },
+    { name: "Australia", route: "/countries" },
+    { name: "Japan", route: "/countries" },
+    { name: "UK", route: "/countries" },
+    { name: "Malta", route: "/countries" },
   ];
 
   const testPreparations = [
-    { name: "IELTS Preparation", route: "/ielts-preparation" },
-    { name: "TOEFL Preparation", route: "/toefl-preparation" },
-    { name: "PTE Preparation", route: "/pte-preparation" },
-    { name: "GRE Preparation", route: "/gre-preparation" },
-    { name: "GMAT Preparation", route: "/gmat-preparation" },
-    { name: "SAT Preparation", route: "/sat-preparation" },
+    { name: "IELTS Preparation", route: "/test-preparations" },
+    { name: "PTE Preparation", route: "/test-preparations" },
+    { name: "Japanese Language", route: "/test-preparations" },
+    { name: "Korean Language", route: "/test-preparations" },
   ];
 
   const services = [
-    { name: "University Selection", route: "/university-selection" },
-    { name: "Visa Assistance", route: "/visa-assistance" },
-    { name: "Scholarship Guidance", route: "/scholarship-guidance" },
-    { name: "Document Preparation", route: "/document-preparation" },
-    { name: "Pre-Departure Briefing", route: "/pre-departure-briefing" },
-    { name: "Post-Arrival Support", route: "/post-arrival-support" },
+    { name: "Study Abroad Consultation", route: "/services" },
+    { name: "Visa Assistance", route: "/services" },
+    { name: "Scholarship Guidance", route: "/services" },
+    { name: "Test Preparations", route: "/services" },
+    { name: "Pre-Departure Briefing", route: "/services" },
+    { name: "Post-Arrival Support", route: "/services" },
   ];
 
   // Handle click outside mobile menu and dropdowns
@@ -76,7 +71,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // FIXED: Handle scroll behavior for complete hiding
+  // Handle scroll behavior for complete hiding
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -149,7 +144,8 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/" className="text-2xl md:text-3xl font-bold">
-                <span className="text-[#2C3C81]">LOGO</span>
+                <span className="text-[#2C3C81]">Gurukul</span>
+                <span className="text-[#C73D43]">Education</span>
               </Link>
             </div>
 
@@ -173,10 +169,10 @@ export default function Navbar() {
                 {/* Dropdown Menu */}
                 {showDestinations && (
                   <div
-                    className="absolute top-full w-[60vw] -left-[10vw] mt-2 bg-white rounded-lg shadow-xl border border-gray-100 py-4 z-50"
+                    className="absolute top-full left-1/2 transform -translate-x-1/2 w-64 mt-2 bg-white rounded-lg shadow-xl border border-gray-100 py-4 z-50"
                     onMouseLeave={() => setShowDestinations(false)}
                   >
-                    <div className="grid grid-cols-2 gap-2 px-4">
+                    <div className="space-y-2 px-4">
                       {destinations.map((destination, index) => (
                         <Link
                           key={index}
@@ -294,7 +290,7 @@ export default function Navbar() {
               </Link>
 
               <Link
-                href="/consultation"
+                href="/contact"
                 className="bg-[#C73D43] text-[#F5F4F5] px-4 xl:px-6 py-2 rounded font-medium hover:bg-[#B2ACCE] hover:text-[#2C3C81] transition-all duration-300 whitespace-nowrap"
               >
                 GET CONSULTATION
@@ -317,7 +313,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu - Combined with top navbar items */}
+        {/* Mobile Menu */}
         <div
           ref={mobileMenuRef}
           className={`lg:hidden fixed top-0 right-0 w-80 bg-white h-screen transform transition-transform duration-300 ease-in-out z-100 shadow-xl ${
@@ -474,7 +470,7 @@ export default function Navbar() {
               </Link>
 
               <Link
-                href="/consultation"
+                href="/contact"
                 className="w-full bg-[#C73D43] text-[#F5F4F5] px-6 py-3 rounded font-medium hover:bg-[#B2ACCE] hover:text-[#2C3C81] transition-all duration-300 text-center block"
                 onClick={() => setIsOpen(false)}
               >
