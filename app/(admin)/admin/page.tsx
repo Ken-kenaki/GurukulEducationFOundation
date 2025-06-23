@@ -1,4 +1,6 @@
-// src/app/admin/page.tsx
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Users,
   FileText,
@@ -10,28 +12,96 @@ import {
   Activity,
 } from "lucide-react";
 
-// Mock data - replace with actual Appwrite queries
-const stats = [
-  { name: "Total Stories", value: "24", icon: Users, change: "+12%" },
-  { name: "Gallery Items", value: "156", icon: Image, change: "+8%" },
-  { name: "Form Submissions", value: "89", icon: FileText, change: "+23%" },
-  { name: "News & Events", value: "42", icon: Calendar, change: "+5%" },
-  { name: "Countries", value: "15", icon: Globe, change: "+2%" },
-  { name: "Universities", value: "128", icon: GraduationCap, change: "+15%" },
-];
+interface Stats {
+  stories: number;
+  gallery: number;
+  forms: number;
+  newsEvents: number;
+  countries: number;
+  universities: number;
+}
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<Stats>({
+    stories: 0,
+    gallery: 0,
+    forms: 0,
+    newsEvents: 0,
+    countries: 0,
+    universities: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch all stats in parallel
+      const [storiesRes, galleryRes, formsRes, newsRes, countriesRes, universitiesRes] = await Promise.all([
+        fetch("/api/stories"),
+        fetch("/api/gallery"),
+        fetch("/api/forms"),
+        fetch("/api/news-events"),
+        fetch("/api/countries"),
+        fetch("/api/universities"),
+      ]);
+
+      const [stories, gallery, forms, newsEvents, countries, universities] = await Promise.all([
+        storiesRes.json(),
+        galleryRes.json(),
+        formsRes.json(),
+        newsRes.json(),
+        countriesRes.json(),
+        universitiesRes.json(),
+      ]);
+
+      setStats({
+        stories: stories.total || stories.documents?.length || 0,
+        gallery: gallery.total || gallery.documents?.length || 0,
+        forms: forms.total || forms.documents?.length || 0,
+        newsEvents: newsEvents.total || newsEvents.documents?.length || 0,
+        countries: countries.total || countries.documents?.length || 0,
+        universities: universities.total || universities.documents?.length || 0,
+      });
+    } catch (error) {
+      console.error("Failed to fetch stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statsData = [
+    { name: "Total Stories", value: stats.stories.toString(), icon: Users, change: "+12%" },
+    { name: "Gallery Items", value: stats.gallery.toString(), icon: Image, change: "+8%" },
+    { name: "Form Submissions", value: stats.forms.toString(), icon: FileText, change: "+23%" },
+    { name: "News & Events", value: stats.newsEvents.toString(), icon: Calendar, change: "+5%" },
+    { name: "Countries", value: stats.countries.toString(), icon: Globe, change: "+2%" },
+    { name: "Universities", value: stats.universities.toString(), icon: GraduationCap, change: "+15%" },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-lg shadow p-6">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back!</p>
+        <p className="text-gray-600 mt-2">Welcome back! Here's what's happening with your admin panel.</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stats.map((stat) => {
+        {statsData.map((stat) => {
           const Icon = stat.icon;
           return (
             <div key={stat.name} className="bg-white rounded-lg shadow p-6">
@@ -95,7 +165,9 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="bg-purple-100 p-2 rounded-full"></div>
+              <div className="bg-purple-100 p-2 rounded-full">
+                <Image className="h-4 w-4 text-purple-600" />
+              </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">
                   Gallery updated
